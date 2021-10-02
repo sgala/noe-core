@@ -5,7 +5,8 @@ package noe.common.utils
  * @author jstefl , rhatlapa
  * @author Pavel Reichl <preichl@redhat.com>
  *
- *  Some examples of version comparison logic:
+ * <pre>{@code
+ *   Some examples of version comparison logic:
  *
  *         X.Y.Z == X.Y.Z.GA
  *         + + +           +
@@ -46,6 +47,7 @@ package noe.common.utils
  *                       // prerelease tags.
  *    X.Y.Z.SP1 > X.Y.Z.SP1.DR1
  *    X.Y.Z.SP1 == X.Y.Z.SP1.GA
+ *}</pre>
  *
  */
 public class Version implements Comparable<Version> {
