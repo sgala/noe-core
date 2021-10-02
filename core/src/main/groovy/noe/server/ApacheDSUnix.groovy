@@ -12,7 +12,7 @@ class ApacheDSUnix extends ApacheDS {
 
   ApacheDSUnix(String basedir, version) {
     super(basedir, version)
-    this.start = ['/bin/sh', 'apacheds.sh']
+    this.start = ['/bin/sh', 'apacheds.sh', 'start']
     if (platform.isSolaris()) this.processCode = "org.apache.directory"
     else this.processCode = "apacheds"
   }
