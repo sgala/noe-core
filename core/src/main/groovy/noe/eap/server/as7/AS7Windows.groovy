@@ -23,7 +23,7 @@ class AS7Windows extends AS7 {
     // TODO: Extend to support other profiles... (only standalone-ha is supported atm)
 
     //Hmm, see -Xss1024KB
-    //    "set","JAVA_OPTS=","-Xms1303M","-Xmx1303M","-XX:MaxPermSize=256M","-Xss1024KB","-Djava.net.preferIPv4Stack=true","&",
+    //    "set","JAVA_OPTS=","-Xms1303M","-Xmx1303M","-Xss1024KB","-Djava.net.preferIPv4Stack=true","&",
     setProfile(this.configFile)
 
   }
