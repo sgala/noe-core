@@ -833,7 +833,7 @@ class Library {
       JBFile.mkdir(libDirToUse)
     }
     groovyAndAntLibs.each { libName ->
-      if (!new File(libDirToUse, libName).exists()) {
+      if (!new File(libDirToUse, libName)?.exists()) {
         JBFile.move(Library.retrieveResourceAsFile("lib/${libName}"), libDirToUse)
       }
       classpath.add(new File(libDirToUse, libName).absolutePath)

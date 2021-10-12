@@ -248,7 +248,7 @@ class JBFile {
    * @return false if file doesn't denote existing file or directory or moving fails, true if everything was moved successfully
    */
   static boolean move(File file, File destDir, Boolean trySudo = false) {
-    if (!file.exists()) return false
+    if (!(file?.exists())) return false
 
     if (!destDir.exists()) {
       try {
