@@ -6,7 +6,6 @@ import groovy.xml.XmlUtil
 import noe.common.newcmd.CmdBuilder
 import noe.common.newcmd.CmdCommand
 import noe.common.utils.Cmd
-import noe.common.utils.IO
 import noe.common.utils.JBFile
 import noe.common.utils.Library
 import noe.common.utils.XmlUtils
@@ -104,7 +103,7 @@ class JonAgent extends ServerAbstract {
         def categoryNode = xmlParser.parseText(categoryNodeAsString)
         GPathResult xml = xmlParser.parse(log4jXmlFile)
         GPathResult category = xml.category.find { it.@name == categoryNode.@name }
-        IO.handleOutput("Old category ${XmlUtil.serialize(category)}, new category ${XmlUtil.serialize(categoryNode)}", IO.LOG_LEVEL_FINER)
+        log.debug("Old category ${XmlUtil.serialize(category)}, new category ${XmlUtil.serialize(categoryNode)}")
         if (category.isEmpty()) {
           xml.appendNode categoryNode
         } else {

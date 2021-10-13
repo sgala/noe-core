@@ -1,7 +1,6 @@
 package noe.fuse.workspace
 
 import groovy.util.logging.Slf4j
-import noe.common.utils.IO
 import noe.common.utils.JBFile
 import noe.common.utils.Library
 import noe.fuse.utils.FuseUtils

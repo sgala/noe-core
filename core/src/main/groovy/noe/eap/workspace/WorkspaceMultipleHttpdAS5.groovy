@@ -2,7 +2,6 @@ package noe.eap.workspace
 
 import groovy.util.logging.Slf4j
 import noe.common.DefaultProperties
-import noe.common.utils.IO
 import noe.eap.server.ServerEap
 import noe.ews.server.ServerEws
 import noe.jbcs.utils.HttpdHelper
@@ -49,7 +48,7 @@ class WorkspaceMultipleHttpdAS5 extends WorkspaceHttpdAS5 {
       if (!serverController.httpdServerIds.contains(id)) {
         def httpdBasedir = getBasedir()
         if (workspaceHttpd.basedirHttpd) httpdBasedir = workspaceHttpd.basedirHttpd
-        IO.handleOutput "TAGMONOCO: httpdBasedir:${httpdBasedir}"
+        log.info("TAGMONOCO: httpdBasedir:${httpdBasedir}")
         Httpd newHttpd = serverController.addServerHttpd(id, httpdBasedir, ServerEws.getHttpdVersion(), [host: workspaceHttpd.bindAddressHttpd], httpdDir)
         newHttpd.createNewServerInstance(id, i)
       }
@@ -58,7 +57,7 @@ class WorkspaceMultipleHttpdAS5 extends WorkspaceHttpdAS5 {
     }
 
     serverController.getHttpdServerIds().each { httpdServerId ->
-      IO.handleOutput "TAGMONOYYO: httpdBasedir:${httpdServerId}"
+      log.info("TAGMONOYYO: httpdBasedir:${httpdServerId}")
       if (httpdServerId != Httpd.defaultServerId) {
         Httpd httpd = serverController.getServerById(httpdServerId)
         HttpdHelper httpdHelper = new HttpdHelper(platform)

@@ -1,7 +1,6 @@
 package noe.workspace
 
 import groovy.util.logging.Slf4j
-import noe.common.utils.IO
 import noe.common.utils.JBFile
 import noe.common.utils.Library
 import noe.eap.server.ServerEap
@@ -17,17 +16,17 @@ import noe.server.AS7
 class WorkspaceAS7 extends WorkspaceAbstract {
 
   WorkspaceAS7(String serverId = null) {
-    IO.handleOutput('WorkspaceAS7(): BEGIN')
+    log.info('WorkspaceAS7(): BEGIN')
     def basedir = getBasedir()
     def as7ServerId = serverId ?: ServerEap.getPrefix()
 
     def server = AS7.getInstance(basedir, '', context)
     serverController.addServer("${as7ServerId}", server)
-    IO.handleOutput('WorkspaceAS7(): END')
+    log.info('WorkspaceAS7(): END')
   }
 
   def prepare() {
-    IO.handleOutput('Creating of new WorkspaceAS7 started')
+    log.info('Creating of new WorkspaceAS7 started')
 
     // jboss-cli.bat does not work when EAP installed into directory with spaces
     if (Boolean.valueOf(Library.getUniversalProperty("WINDOWS_PATH_WORKAROUND_BZ1031173", false))) {
@@ -41,7 +40,7 @@ class WorkspaceAS7 extends WorkspaceAbstract {
     }
 
     serverController.backup()
-    IO.handleOutput('Creating of new WorkspaceAS7 finished')
+    log.info('Creating of new WorkspaceAS7 finished')
   }
 
   def destroy() {

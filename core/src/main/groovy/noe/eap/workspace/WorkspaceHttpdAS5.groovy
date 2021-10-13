@@ -2,7 +2,6 @@ package noe.eap.workspace
 
 import groovy.util.logging.Slf4j
 import noe.common.utils.Cleaner
-import noe.common.utils.IO
 import noe.common.utils.Library
 import noe.common.utils.Version
 import noe.eap.server.ServerEap
@@ -45,44 +44,44 @@ class WorkspaceHttpdAS5 extends WorkspaceAbstract {
    * Prepare the workspace.
    */
   def prepare() {
-    IO.handleOutput('Creating of new Workspace started')
+    log.info('Creating of new Workspace started')
     workspaceHttpd.prepare()
     workspaceAS5.prepare()
     /// Backup all servers state
     serverController.backup()
-    IO.handleOutput('Creating of new Workspace finished')
+    log.info('Creating of new Workspace finished')
   }
 
   /**
    * Destroy the workspace.
    */
   def destroy() {
-    IO.handleOutput('Destroying of default Workspace started')
+    log.info('Destroying of default Workspace started')
     workspaceHttpd.destroy()
     workspaceAS5.destroy()
     // TODO: Verify this
     if (!this.skipInstall) {
       if (deleteWorkspace) {
         Cleaner.cleanDirectoryBasedOnRegex(new File(getBasedir()), /.*(jws|jboss-ews|jbcs|httpd|jboss-eap).*/)
-        IO.handleOutput('EAP workspace deleted: ' + basedir)
+        log.info('EAP workspace deleted: ' + basedir)
       }
-      IO.handleOutput('EAP workspace NOT deleted: ' + basedir)
+      log.info('EAP workspace NOT deleted: ' + basedir)
     }
-    IO.handleOutput('Destroying of default Workspace finished')
+    log.info('Destroying of default Workspace finished')
   }
 
   /**
    * Initialize the workspace.
    */
   void initWorkspaceHttpdAS5() {
-    IO.handleOutput('WorkspaceHttpdAS5.initWorkspaceHttpdAS5(): BEGIN')
+    log.info('WorkspaceHttpdAS5.initWorkspaceHttpdAS5(): BEGIN')
     // TODO: Validate paths
     // TODO: better input param verification
     if (!skipInstall) {
       installHttpdAS5()
     }
     // TODO validate EAP installation
-    IO.handleOutput('WorkspaceHttpdAS5.initWorkspaceHttpdAS5(): END')
+    log.info('WorkspaceHttpdAS5.initWorkspaceHttpdAS5(): END')
   }
 
   /**
@@ -90,7 +89,7 @@ class WorkspaceHttpdAS5 extends WorkspaceAbstract {
    * Static dir expected.
    */
   void installHttpdAS5() {
-    IO.handleOutput('WorkspaceHttpdAS5.installHttpdAS5(): EAP BEGIN')
+    log.info('WorkspaceHttpdAS5.installHttpdAS5(): EAP BEGIN')
     eap5Utils = new Eap5Utils(basedir, ant, platform, eapVersion, ewsVersion)
     // eap5Utils.getIt() initialized automatically by
     File nativesDir = null
@@ -101,7 +100,7 @@ class WorkspaceHttpdAS5 extends WorkspaceAbstract {
       eap5Utils.installWebConnectors(nativesDir)
       eap5Utils.loadModCluster("${ServerEap.getPrefix()}")
     }
-    IO.handleOutput('WorkspaceHttpdAS5.installHttpdAS5(): EAP END')
+    log.info('WorkspaceHttpdAS5.installHttpdAS5(): EAP END')
   }
 
   /**

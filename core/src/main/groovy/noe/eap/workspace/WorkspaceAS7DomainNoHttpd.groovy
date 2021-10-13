@@ -2,7 +2,6 @@ package noe.eap.workspace
 
 import groovy.util.logging.Slf4j
 import noe.common.utils.Cleaner
-import noe.common.utils.IO
 import noe.common.utils.Library
 import noe.eap.utils.Eap6Utils
 import noe.workspace.WorkspaceAS7Domain
@@ -32,55 +31,55 @@ class WorkspaceAS7DomainNoHttpd extends WorkspaceAbstract {
    * Prepare the workspace.
    */
   def prepare() {
-    IO.handleOutput('Creating of new Workspace started')
+    log.info('Creating of new Workspace started')
 
     workspaceAS7Domain.prepare()
 
     /// Backup all servers state
     serverController.backup()
 
-    IO.handleOutput('Creating of new Workspace finished')
+    log.info('Creating of new Workspace finished')
   }
 
   /**
    * Destroy the workspace.
    */
   def destroy() {
-    IO.handleOutput('Destroying of default Workspace started')
+    log.info('Destroying of default Workspace started')
     workspaceAS7Domain.destroy()
     // TODO: Verify this
     if (this.eap && !this.skipInstall) {
       if (deleteWorkspace) {
         Cleaner.cleanDirectoryBasedOnRegex(new File(getBasedir()), /.*(jboss-eap).*/)
-        IO.handleOutput('EAP workspace deleted: ' + basedir)
+        log.info('EAP workspace deleted: ' + basedir)
       }
-      IO.handleOutput('EAP workspace NOT deleted: ' + basedir)
+      log.info('EAP workspace NOT deleted: ' + basedir)
     }
-    IO.handleOutput('Destroying of default Workspace finished')
+    log.info('Destroying of default Workspace finished')
   }
 
   /**
    * Initialize the workspace.
    */
   void initWorkspaceAS7noHttpd() {
-    IO.handleOutput('WorkspaceAS7DomainNoHttpd.initWorkspaceAS7noHttpd(): BEGIN')
+    log.info('WorkspaceAS7DomainNoHttpd.initWorkspaceAS7noHttpd(): BEGIN')
     // TODO: Validate paths
     // TODO: better input param verification
     if (!skipInstall) {
       installAS7()
     }
     // TODO validate EAP installation
-    IO.handleOutput('WorkspaceAS7DomainNoHttpd.initWorkspaceAS7noHttpd(): END')
+    log.info('WorkspaceAS7DomainNoHttpd.initWorkspaceAS7noHttpd(): END')
   }
 
   /**
    * Static dir expected.
    */
   void installAS7() {
-    IO.handleOutput('WorkspaceAS7DomainNoHttpd.installAS7(): EAP BEGIN')
+    log.info('WorkspaceAS7DomainNoHttpd.installAS7(): EAP BEGIN')
     def eap = new Eap6Utils(basedir, ant, platform, eapVersion, "")
     eap.getIt()
-    IO.handleOutput('WorkspaceAS7DomainNoHttpd.installAS7(): EAP END')
+    log.info('WorkspaceAS7DomainNoHttpd.installAS7(): EAP END')
   }
 
   /**

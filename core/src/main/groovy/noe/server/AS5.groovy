@@ -6,7 +6,6 @@ import noe.common.NoeContext
 import noe.common.newcmd.CmdBuilder
 import noe.common.newcmd.CmdCommand
 import noe.common.utils.Cmd
-import noe.common.utils.IO
 import noe.common.utils.JBFile
 import noe.common.utils.Library
 import noe.common.utils.XmlUtils
@@ -116,10 +115,10 @@ class AS5 extends ServerAbstract {
 
   void updateConfSetBindAddress(String address) {
     if (isRunning()) {
-      IO.handleOutput ' --- ERROR: Server is running, change request for bound IP address is IGNORED!', IO.LOG_LEVEL_WARN
+      log.warn(' --- ERROR: Server is running, change request for bound IP address is IGNORED!')
       return
     }
-    IO.handleOutput 'New address for server binding: ' + address
+    log.info('New address for server binding: ' + address)
     updateConfReplaceRegExp("bindingservice.beans/META-INF/bindings-jboss-beans.xml", '<parameter>${jboss.bind.address}</parameter>', '<parameter>' + address + '</parameter>', false, true)
     host = address
   }
@@ -143,9 +142,9 @@ class AS5 extends ServerAbstract {
     super.undeployByDeleting(app)
 
     File workDirPath = new File(getServerRoot(), workDir)
-    IO.handleOutput("workDirPath: ${workDirPath}")
+    log.info("workDirPath: ${workDirPath}")
     if (workDirPath.isDirectory()) {
-      IO.handleOutput("--- Deleting app's work dir ---")
+      log.info("--- Deleting app's work dir ---")
       ant.delete(includeemptydirs: "true") {
         fileset(dir: workDirPath.getAbsolutePath(), includes: "**/${app}/**")
       }
@@ -167,29 +166,30 @@ class AS5 extends ServerAbstract {
   @Override
   void backupConfs() {
     super.backupConfs()
-    IO.handleOutput '--- Starting backup all deploy config files ---'
+    log.info('--- Starting backup all deploy config files ---')
     deployConfigDirs.each { srcDir ->
       def destDir = new File(platform.tmpDir, countBackupConfName(new File(srcDir).name)).absolutePath
       backupConfDir(srcDir, destDir)
     }
-    IO.handleOutput '--- Backup all deploy config files successfully done ---'
+    log.info('--- Backup all deploy config files successfully done ---')
   }
+
 
   @Override
   void restoreConfs() {
     super.restoreConfs()
-    IO.handleOutput '--- Starting restore of of all deploy config files ---'
+    log.info('--- Starting restore of of all deploy config files ---')
     deployConfigDirs.each { destDir ->
       def srcDir = new File(platform.tmpDir, countBackupConfName(new File(destDir).name)).absolutePath
       restoreConfDir(srcDir, destDir)
     }
-    IO.handleOutput '--- Restoring all deploy config files successfully done ---'
+    log.info('--- Restoring all deploy config files successfully done ---')
   }
 
   @Override
   void archiveConfs(String testName, String serverId = '') {
     super.archiveConfs(testName, serverId)
-    IO.handleOutput '--- Starting archiving of all deploy conf dir files ---'
+    log.debug('--- Starting archiving of all deploy conf dir files ---')
 
     def s = platform.sep
     def targetDir
@@ -208,7 +208,7 @@ class AS5 extends ServerAbstract {
       }
     }
 
-    IO.handleOutput '--- Archiving of all deploy conf files successfully done ---'
+    log.info('--- Archiving of all deploy conf files successfully done ---')
   }
 
   /**

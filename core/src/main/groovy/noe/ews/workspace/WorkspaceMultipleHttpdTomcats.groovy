@@ -1,7 +1,6 @@
 package noe.ews.workspace
 
 import groovy.util.logging.Slf4j
-import noe.common.utils.IO
 import noe.ews.server.ServerEws
 import noe.jbcs.utils.HttpdHelper
 import noe.server.Httpd
@@ -57,7 +56,7 @@ class WorkspaceMultipleHttpdTomcats extends WorkspaceHttpd {
       if (!serverController.httpdServerIds.contains(id)) {
         def httpdBasedir = getBasedir()
         if (super.basedirHttpd) httpdBasedir = super.basedirHttpd
-        IO.handleOutput "HTTPD Base Directory: httpdBasedir:${httpdBasedir}"
+        log.info( "HTTPD Base Directory: httpdBasedir:${httpdBasedir}")
         Httpd newHttpd = serverController.addServerHttpd(id, httpdBasedir, ServerEws.getHttpdVersion(), [host: super.bindAddressHttpd], httpdDir)
         newHttpd.createNewServerInstance(id, i)
       }
@@ -65,7 +64,7 @@ class WorkspaceMultipleHttpdTomcats extends WorkspaceHttpd {
 
     // Call the postinstall script on ALL the httpds
     serverController.getHttpdServerIds().each { httpdServerId ->
-      IO.handleOutput "HTTPD Base Directory: httpdBasedir:${httpdServerId}"
+      log.info("HTTPD Base Directory: httpdBasedir:${httpdServerId}")
         Httpd httpd = serverController.getServerById(httpdServerId)
         HttpdHelper httpdHelper = new HttpdHelper(platform)
         httpdHelper.runPostinstallAndFixExecRights(httpd)

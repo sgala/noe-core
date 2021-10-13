@@ -7,7 +7,6 @@ import noe.common.NoeContext
 import noe.common.newcmd.CmdBuilder
 import noe.common.newcmd.CmdCommand
 import noe.common.utils.Cmd
-import noe.common.utils.IO
 import noe.common.utils.JBFile
 import noe.common.utils.Library
 import noe.common.utils.Version
@@ -111,8 +110,8 @@ class AS7Domain extends ServerAbstract {
     configureJBossCliStop()
 
 
-    IO.handleOutput "TIGITAG: cfgHost is $cfgHost whereas AS7Properties.MANAGEMENT_IP_ADDRESS is ${AS7Properties.MANAGEMENT_IP_ADDRESS} " +
-        "and AS7Properties.PUBLIC_IP_ADDRESS is ${AS7Properties.PUBLIC_IP_ADDRESS}."
+    log.info("TIGITAG: cfgHost is $cfgHost whereas AS7Properties.MANAGEMENT_IP_ADDRESS is ${AS7Properties.MANAGEMENT_IP_ADDRESS} " +
+        "and AS7Properties.PUBLIC_IP_ADDRESS is ${AS7Properties.PUBLIC_IP_ADDRESS}.")
   }
 
   static ServerAbstract getInstance(String basedir, String as7Dir = "", NoeContext context = NoeContext.forCurrentContext()) {
@@ -255,7 +254,7 @@ class AS7Domain extends ServerAbstract {
   @Override
   void updateConfSetBindAddress(String address) {
     if (isRunning()) {
-      IO.handleOutput ' --- ERROR: Server is running, change request for bound IP address is IGNORED!'
+      log.info(' --- ERROR: Server is running, change request for bound IP address is IGNORED!')
       return
     }
     updateConfReplaceRegExp(configFile, 'jboss.bind.address.management:[^}]*', 'jboss.bind.address.management:' + address)
@@ -297,14 +296,14 @@ class AS7Domain extends ServerAbstract {
       updateConfReplaceRegExp(configFile, stringToReplace, newString)
       serverOffsets[key] += offset
     }
-    IO.handleOutput("portOffset: $portOffset", IO.LOG_LEVEL_FINEST)
-    IO.handleOutput("mainHttpPort: $mainHttpPort", IO.LOG_LEVEL_FINEST)
-    IO.handleOutput("mainHttpsPort: $mainHttpsPort", IO.LOG_LEVEL_FINEST)
-    IO.handleOutput("ajpPort: $ajpPort", IO.LOG_LEVEL_FINEST)
-    IO.handleOutput("managementHttpPort: $managementHttpPort", IO.LOG_LEVEL_FINEST)
-    IO.handleOutput("managementHttpsPort: $managementHttpsPort", IO.LOG_LEVEL_FINEST)
-    IO.handleOutput("managementNativePort: $managementNativePort", IO.LOG_LEVEL_FINEST)
-    IO.handleOutput("serverOffsets: $serverOffsets", IO.LOG_LEVEL_FINEST)
+    log.trace("portOffset: $portOffset")
+    log.trace("mainHttpPort: $mainHttpPort")
+    log.trace("mainHttpsPort: $mainHttpsPort")
+    log.trace("ajpPort: $ajpPort")
+    log.trace("managementHttpPort: $managementHttpPort")
+    log.trace("managementHttpsPort: $managementHttpsPort")
+    log.trace("managementNativePort: $managementNativePort")
+    log.trace("serverOffsets: $serverOffsets")
     setDefault()
     this.portOffsetNeverUpdated = false
   }
@@ -355,7 +354,7 @@ class AS7Domain extends ServerAbstract {
    */
   Map<String, Integer> retrieveDomainServerPorts(String serverName) {
     def defaultMainHttpPort = 8080
-    IO.handleOutput("Retrieving domain servers ports", IO.LOG_LEVEL_FINER)
+    log.trace("Retrieving domain servers ports")
     def serverPorts = [:]
     // main http port
     serverPorts['mainHttpPort'] = defaultMainHttpPort + serverOffsets.get(serverName)

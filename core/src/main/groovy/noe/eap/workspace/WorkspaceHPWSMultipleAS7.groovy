@@ -3,7 +3,6 @@ package noe.eap.workspace
 import groovy.util.logging.Slf4j
 import noe.common.DefaultProperties
 import noe.common.utils.Cleaner
-import noe.common.utils.IO
 import noe.common.utils.JBFile
 import noe.common.utils.Library
 import noe.eap.server.ServerEap
@@ -41,9 +40,9 @@ class WorkspaceHPWSMultipleAS7 extends WorkspaceAbstract {
   }
 
   def prepare() {
-    IO.handleOutput('Creating of new Workspace started')
+    log.info('Creating of new Workspace started')
     workspaceAS7.prepare()
-    IO.handleOutput "PRDEL: ${serverController.servers} and ${ServerEap.getPrefix()}"
+    log.info("PRDEL: ${serverController.servers} and ${ServerEap.getPrefix()}")
     serverController.getServerById(ServerEap.getPrefix()).shiftPorts(DefaultProperties.DEFAULT_SHIFT_PORT_OFFSET)
 
     def as7Dir = ''
@@ -51,7 +50,7 @@ class WorkspaceHPWSMultipleAS7 extends WorkspaceAbstract {
     def id = ''
     for (int i = 2; i < numberOfAdditionalServers + 2; i++) {
       id = "${ServerEap.getPrefix()}-${i}"
-      IO.handleOutput("Creating new AS7 server instance: ${id}")
+      log.info("Creating new AS7 server instance: ${id}")
 
       // if node2 is not defined - create default
       if (!serverController.getAs7ServerIds().contains(id)) {
@@ -61,7 +60,7 @@ class WorkspaceHPWSMultipleAS7 extends WorkspaceAbstract {
         serverController.addServer(id, nextServer)
       }
     }
-    IO.handleOutput('Creating of new Workspace finished')
+    log.info('Creating of new Workspace finished')
 
     /// Backup all servers state
     serverController.backup()
@@ -71,29 +70,29 @@ class WorkspaceHPWSMultipleAS7 extends WorkspaceAbstract {
    * Destroy the workspace.
    */
   def destroy() {
-    IO.handleOutput('Destroying of default Workspace started')
+    log.info('Destroying of default Workspace started')
     workspaceAS7.destroy()
     // TODO: Verify this
     if (this.eap && !this.skipInstall) {
       if (deleteWorkspace) {
         Cleaner.cleanDirectoryBasedOnRegex(new File(getBasedir()), /.*(jboss-eap).*/)
-        IO.handleOutput('EAP workspace deleted: ' + basedir)
+        log.info('EAP workspace deleted: ' + basedir)
       }
-      IO.handleOutput('EAP workspace NOT deleted: ' + basedir)
+      log.info('EAP workspace NOT deleted: ' + basedir)
     }
-    IO.handleOutput('Destroying of default Workspace finished')
+    log.info('Destroying of default Workspace finished')
   }
 
   /**
    * Initialize the workspace.
    */
   void initWorkspaceHPWSMultipleAS7() {
-    IO.handleOutput('WorkspaceHPWSMultipleAS7.initWorkspaceHPWSMultipleAS7(): BEGIN')
+    log.info('WorkspaceHPWSMultipleAS7.initWorkspaceHPWSMultipleAS7(): BEGIN')
     if (!skipInstall) {
       installHPWSMultipleAS7()
     }
     // TODO validate EAP installation
-    IO.handleOutput('WorkspaceHPWSMultipleAS7.initWorkspaceHPWSMultipleAS7(): END')
+    log.info('WorkspaceHPWSMultipleAS7.initWorkspaceHPWSMultipleAS7(): END')
   }
 
   /**
@@ -101,14 +100,14 @@ class WorkspaceHPWSMultipleAS7 extends WorkspaceAbstract {
    * Static dir expected.
    */
   void installHPWSMultipleAS7() {
-    IO.handleOutput('WorkspaceHPWSMultipleAS7.installHPWSMultipleAS7: EAP BEGIN')
+    log.info('WorkspaceHPWSMultipleAS7.installHPWSMultipleAS7: EAP BEGIN')
     def eap = new Eap6Utils(basedir, ant, platform, eapVersion, "")
     eap.getIt()
     if (installNativesZip) eap.installNativesZip()
 
     def httpdDirOriginal = "hpws22"
 
-    IO.handleOutput "TAGHPWW1: Creating HPWS instance ${httpdDirOriginal} in ${basedir.toString()}..."
+    log.info("TAGHPWW1: Creating HPWS instance ${httpdDirOriginal} in ${basedir.toString()}...")
     /**
      *  false, false with copyDirectoryContent prevents:
      * -rwxr-xr-x   1 root       hudson        7103 Nov 12  2012 /hudson_workspace/workspace/job/hpws22/apache/error/HTTP_REQUEST_URI_TOO_LARGE.html.var
@@ -163,7 +162,7 @@ class WorkspaceHPWSMultipleAS7 extends WorkspaceAbstract {
     }
     /// Backup all server state
     serverController.backup()
-    IO.handleOutput('WorkspaceHPWSMultipleAS7.installHPWSMultipleAS7: EAP END')
+    log.info('WorkspaceHPWSMultipleAS7.installHPWSMultipleAS7: EAP END')
   }
 
   /**
