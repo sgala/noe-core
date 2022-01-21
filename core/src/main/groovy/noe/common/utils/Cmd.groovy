@@ -821,11 +821,10 @@ public class Cmd {
      */
     Process psProc = psCommand.execute()
     Process proc2 = ['grep', identifier].execute()
-    // This is a big assumption, but I guess both EAP and Catalina have .sh start scripts...
-    Process proc3 = ['grep', '.sh'].execute()
+    //Process proc3 = ['grep', '.sh'].execute()
     Process proc4 = ['grep', '-v', 'grep'].execute()
-    psProc | proc2 | proc3 | proc4
-    proc4.waitFor()
+    psProc | proc2 /*| proc3 */| proc4
+      proc4.waitFor()
     if (proc4.exitValue()) {
       /**
        * Hmm, it looks like we didn't find anything. Might happen with Tomcat on Solaris 10. Let's go this way then:
