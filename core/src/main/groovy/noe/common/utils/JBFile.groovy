@@ -443,8 +443,10 @@ class JBFile {
       if (!platform.isWindows() && (useAdminPrivileges || trySudo)) {
         def classpath = Library.groovyWithAntAsClasspath()
 
+        match = match.replaceAll("\\"."\\\\")
         match = match.replaceAll(platform.nl, '\\\\n')
         match = match.replaceAll("'", "\\\\'")
+        replace = replace.replaceAll("\\"."\\\\")
         replace = replace.replaceAll(platform.nl, '\\\\n')
         replace = replace.replaceAll("'", "\\\\'")
 
